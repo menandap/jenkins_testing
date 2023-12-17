@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: menandap
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: menandap
+  template:
+    metadata:
+      name: menandap
+      labels:
+        app: menandap
+    spec:
+      containers:
+        - name: menandap
+          image: menandap/devopsgitlab:CI_COMMIT_SHA
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: menandap-service
+spec:
+  type: NodePort
+  selector:
+    app: menandap
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30001
